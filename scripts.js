@@ -71,12 +71,12 @@ const DOM = { //Document Object Model (forma de modificar o html com JS)
         //Verifica se o valor de transação e positivo ou negativo
         const CSSclass = transaction.amount > 0 ? "income" : "expense" //if ternário
 
-
+        const amount = Utils.formatCurrency(transaction.amount)
 
         //${} interpolar(introduzir)
         const html = `
             <td class="description">${transaction.description}</td>
-            <td class="${CSSclass}">${transaction.amount}</td>
+            <td class="${CSSclass}">${amount}</td>
             <td class="date">${transaction.date}</td>
             <td><img src="./assets/minus.svg" alt="Remover Transação"></td>
         </tr>    
@@ -90,6 +90,19 @@ const Utils = {
     formatCurrency(value) {
         //Formatação da moeda
         const signal = Number(value) < 0 ? "-" : ""
+
+        value = String(value).replace(/\D/g,"")//Expressão regular(regex)
+
+        value = Number(value) / 100
+
+        /*O método toLocaleString() retorna uma string com uma representação sensível 
+        ao idioma da data presente na mesma.*/
+        value = value.toLocaleString("pt-BR", {
+            style: "currency", //Moeda
+            currency: "BRL"     //Real Brasileiro
+        })
+
+        return signal + value
     }
 }
 
